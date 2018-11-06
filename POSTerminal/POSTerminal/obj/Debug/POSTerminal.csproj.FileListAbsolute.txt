@@ -1,0 +1,8 @@
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\bin\Debug\POSTerminal.exe.config
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\bin\Debug\POSTerminal.exe
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\bin\Debug\POSTerminal.pdb
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\obj\Debug\POSTerminal.csprojAssemblyReference.cache
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\obj\Debug\POSTerminal.csproj.CoreCompileInputs.cache
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\obj\Debug\POSTerminal.exe
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\obj\Debug\POSTerminal.pdb
+C:\Users\mhern\OneDrive - KNEX\Desktop\DevBuild Assessments\MidTerm Project\POSTerminal\POSTerminal\bin\Debug\FoodMenu.csv
