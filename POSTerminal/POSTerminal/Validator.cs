@@ -73,5 +73,16 @@ namespace POSTerminal
             return choice;
         }
 
+        public static double ValidateCashPayment(string message, double minPaymentNeeded)
+        {
+            Console.Write(message);
+            double payment;
+            while(!double.TryParse(Console.ReadLine(), out payment) || payment < minPaymentNeeded)
+            {
+                Console.WriteLine("Invalid input. Please provide sufficient funds.");
+                Console.WriteLine(message);
+            }
+            return payment;
+        }
     }
 }

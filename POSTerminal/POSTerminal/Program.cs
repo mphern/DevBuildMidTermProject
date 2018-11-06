@@ -41,6 +41,12 @@ namespace POSTerminal
                     DisplayOrder(customerOrder, orderPrices);
                 }
 
+                else if(choice == 4)
+                {
+                    PayForOrder(customerOrder, orderPrices);
+                    orderDone = true;
+                }
+
                 else
                 {
                     break;
@@ -243,6 +249,36 @@ namespace POSTerminal
                 Console.WriteLine("====================================");
                 Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Grand Total:", grandTotalString);
             }
+        }
+
+        public static void PayForOrder(List<string> order, List<double> prices)
+        {
+            Console.WriteLine("\nHow would you like to pay:");
+            Console.WriteLine("1. Cash");
+            Console.WriteLine("2. Credit");
+            Console.WriteLine("3. Check");
+            int choice = Validator.ValidateChoice("Enter choice (1-3): ", 1, 3);
+            if(choice == 1)
+            {
+                PayWithCash(order, prices);
+            }
+
+        }
+
+        public static void PayWithCash(List<string> order, List<double> prices)
+        {
+            double totalPaymentNeeded = prices.Sum() * 1.06;
+            DisplayOrder(order, prices);
+            double payment = Validator.ValidateCashPayment("\nEnter amount tendered: ", totalPaymentNeeded);
+            if(payment == totalPaymentNeeded)
+            {
+                Console.WriteLine("Thank you! Enjoy your meal.");
+            }
+            else
+            {
+                Console.WriteLine("\n$" + Math.Round(payment - totalPaymentNeeded, 2) + " is your change. Thank you! Enjoy your meal.");
+            }
+      
         }
 
 
