@@ -16,13 +16,13 @@ namespace POSTerminal
             List<string> customerOrder = new List<string>();
             List<double> orderPrices = new List<double>();
             bool orderDone = false;
+            List<string> choices = new List<string>() { "1. Look at Menu", "2. Create/Add to an order", "3. Display current order and order total", "4. Pay for order", "5. Cancel/Edit current order", "6. Quit" };
+            string currentDirectory = Directory.GetCurrentDirectory();
+            DirectoryInfo directory = new DirectoryInfo(currentDirectory);
+            var fileName = Path.Combine(directory.FullName, "FoodMenu.csv");
+            List<Product> menu = ReadMenu(fileName);
             while (!orderDone)
             {
-                List<string> choices = new List<string>() { "1. Look at Menu", "2. Create an order", "3. Display current order and order total", "4. Pay for order" };
-                string currentDirectory = Directory.GetCurrentDirectory();
-                DirectoryInfo directory = new DirectoryInfo(currentDirectory);
-                var fileName = Path.Combine(directory.FullName, "FoodMenu.csv");
-                List<Product> menu = ReadMenu(fileName);
                 DisplayChoices(choices);
                 int choice = Validator.ValidateChoice("What would you like to do? (Enter 1-" + choices.Count + "): ", 1, choices.Count);
 
@@ -38,24 +38,56 @@ namespace POSTerminal
 
                 else if(choice == 3)
                 {
-                    DisplayOrder(customerOrder, orderPrices);
+                    if (customerOrder.Count == 0)
+                    {
+                        Console.WriteLine("\nYou have not placed an order yet.");
+                    }
+                    else
+                    {
+                        DisplayOrder(customerOrder, orderPrices);
+                    }
                 }
 
                 else if(choice == 4)
                 {
-                    PayForOrder(customerOrder, orderPrices);
-                    orderDone = true;
+                    if (customerOrder.Count == 0)
+                    {
+                        Console.WriteLine("\nYou have not placed an order yet.");
+                    }
+                    else
+                    {
+                        PayForOrder(ref customerOrder, ref orderPrices);
+                    }
+                }
+
+                else if(choice == 5)
+                {
+                    if (customerOrder.Count == 0)
+                    {
+                        Console.WriteLine("\nYou have not placed an order yet.");
+                    }
+                    else
+                    {
+                        CancelOrder(ref customerOrder, ref orderPrices);
+                    }
                 }
 
                 else
                 {
-                    break;
+                    if(orderPrices.Sum() > 0)
+                    {
+                        Console.WriteLine("You cannot leave without paying for your food.");
+                    }
+                    else
+                    {
+                        orderDone = true;
+                    }
                 }
  
             }
 
+            Console.WriteLine("\nHave a nice day. Come again!");
             Console.ReadKey();
-
         }
 
         public static List<Product> ReadMenu(string fileName)
@@ -97,7 +129,7 @@ namespace POSTerminal
             List<string> meals = new List<string>();
             List<string> desserts = new List<string>();
 
-            foreach(Product product in menu)
+            foreach (Product product in menu)
             {
                 if(product.ProductCata == "Fry Item")
                 {
@@ -178,17 +210,17 @@ namespace POSTerminal
                 Console.WriteLine(string.Format("{0,-5} {1,0}", "", desserts[i]));
             }
 
-
-
         }
 
         public static void DisplayChoices(List<string> choices)
         {
             Console.Write("\n");
+            Console.WriteLine("What would you like to do?");
             foreach(string choice in choices)
             {
                 Console.WriteLine(choice);
             }
+            Console.Write("\n> ");
         }
 
         public static void GetCustomerOrder(List<Product> menu, ref List<string> customerOrder, ref List<double> orderTotal)
@@ -209,7 +241,22 @@ namespace POSTerminal
                             customerOrder.Add(product.ProductName);
                             orderTotal.Add(product.Price);
                         }
-                        Console.WriteLine($"\n{quantity} {product.ProductName}{(quantity > 1 ? "s" : "")} {(quantity > 1 ? "have" : "has")} been added to your order.\n");
+                        if (product.ProductCata != "Fry Item")
+                        {
+                            Console.WriteLine($"\n{quantity} {product.ProductName}{(quantity > 1 ? "s" : "")} {(quantity > 1 ? "have" : "has")} been added to your order.\n");
+                        }
+                        else
+                        {
+                            string[] fryArray = product.ProductName.Split();
+                            if(quantity == 1)
+                            {
+                                Console.WriteLine($"\n{quantity} {product.ProductName} has been added to your order.\n");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"\n{quantity} {fryArray[0]} Fries have been added to your order.\n");
+                            }
+                        }
                         break;
                     }
        
@@ -230,57 +277,140 @@ namespace POSTerminal
             double total = prices.Sum();
             string totalString = string.Format("{0:0.00}", total);
             double grandTotal = prices.Sum() + tax;
-            string grandTotalString = string.Format("{0:0.00}", grandTotal);
-            if (order.Count == 0)
+            string grandTotalString = string.Format("{0:0.00}", grandTotal);  
+            foreach (string item in order)
             {
-                Console.WriteLine("***You currently have no items in your order.***");
+                Console.WriteLine(string.Format("{0,0}.  {1, -25} ${2,0}", count, item, prices[count - 1]));
+                count++;
             }
-            else
-            {
-                foreach (string item in order)
-                {
-                    Console.WriteLine(string.Format("{0,0}.  {1, -25} ${2,0}", count, item, prices[count - 1]));
-                    count++;
-                }
-                Console.WriteLine("====================================");
-                Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Subtotal:", totalString));
-                Console.WriteLine("====================================");
-                Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Sales Tax", taxString));
-                Console.WriteLine("====================================");
-                Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Grand Total:", grandTotalString);
-            }
+            Console.WriteLine("====================================");
+            Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Subtotal:", totalString));
+            Console.WriteLine("====================================");
+            Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Sales Tax", taxString));
+            Console.WriteLine("====================================");
+            Console.WriteLine(string.Format("{0,-3} {1,-25} ${2,0}", "", "Grand Total:", grandTotalString));
+
         }
 
-        public static void PayForOrder(List<string> order, List<double> prices)
+        public static void PayForOrder(ref List<string> order, ref List<double> prices)
         {
             Console.WriteLine("\nHow would you like to pay:");
             Console.WriteLine("1. Cash");
             Console.WriteLine("2. Credit");
             Console.WriteLine("3. Check");
             int choice = Validator.ValidateChoice("Enter choice (1-3): ", 1, 3);
+
             if(choice == 1)
             {
-                PayWithCash(order, prices);
+                PayWithCash(ref order, ref prices);
+            }
+
+            if(choice == 2)
+            {
+                PayWithCredit(ref order, ref prices);
+            }
+
+            if(choice == 3)
+            {
+                PayWithCheck(ref order, ref prices);
             }
 
         }
 
-        public static void PayWithCash(List<string> order, List<double> prices)
+        public static void PayWithCash(ref List<string> order, ref List<double> prices)
         {
-            double totalPaymentNeeded = prices.Sum() * 1.06;
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
             double payment = Validator.ValidateCashPayment("\nEnter amount tendered: ", totalPaymentNeeded);
-            if(payment == totalPaymentNeeded)
-            {
-                Console.WriteLine("Thank you! Enjoy your meal.");
-            }
-            else
-            {
-                Console.WriteLine("\n$" + Math.Round(payment - totalPaymentNeeded, 2) + " is your change. Thank you! Enjoy your meal.");
-            }
-      
+            CashReceipt(ref order, ref prices, payment);
         }
 
+        public static void PayWithCheck(ref List<string> order, ref List<double> prices)
+        {
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
+            DisplayOrder(order, prices);
+            double payment = Validator.ValidateCheckPayment("\nPlease provide amount on check: ", totalPaymentNeeded);
+            string routingNumber = Validator.ValidateRoutingNumber("Please provide 9 digit Routing Number: ");
+            string accountNumber = Validator.ValidateAccountCheckNumber("Please provide account number (leave out dashes(-) and spaces): ");
+            string checkNumber = Validator.ValidateAccountCheckNumber("Please provide check number: ");
+            CheckReceipt(ref order, ref prices, checkNumber);
+        }
+
+        public static void PayWithCredit(ref List<string> order, ref List<double> prices)
+        {
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
+            DisplayOrder(order, prices);
+            string creditCardNumber = Validator.ValidateCreditCardNumber("\nPlease provide Credit Card Number: ");
+            Validator.ValidateExpirationDate("Please provide Expiration Date (mm/yy): ");
+            string cvvNumber = Validator.ValidateCVVNumber("Please provide CVV number: ");
+            CreditReceipt(ref order, ref prices, creditCardNumber);
+        }
+
+        public static void CashReceipt(ref List<string> order, ref List<double> prices, double payment)
+        {
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
+            DisplayOrder(order, prices);
+            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", payment));
+            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Change:", string.Format("{0:0.00}", payment-totalPaymentNeeded));
+            Console.WriteLine("***************RECEIPT***************");
+            Console.WriteLine("\nThank you! Enjoy your meal!");
+            order = new List<string>();
+            prices = new List<double>();
+        }
+
+        public static void CreditReceipt(ref List<string> order, ref List<double> prices, string creditCardNumber)
+        {
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
+            string hiddenCardNumber = string.Concat(Enumerable.Repeat("*", creditCardNumber.Length - 4)) + creditCardNumber.Substring(creditCardNumber.Length - 4);
+            DisplayOrder(order, prices);
+            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-21} {2,0}", "", "Paid with Card #:", hiddenCardNumber);
+            Console.WriteLine("**********RECEIPT**********");
+            Console.WriteLine("\nThank you! Enjoy your meal!");
+            order = new List<string>();
+            prices = new List<double>();
+
+        }
+
+        public static void CheckReceipt(ref List<string> order, ref List<double> prices, string checkNumber)
+        {
+            double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
+            DisplayOrder(order, prices);
+            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-25} {2,0}", "", "Paid with Check #:", checkNumber);
+            Console.WriteLine("**********RECEIPT**********");
+            Console.WriteLine("\nThank you! Enjoy your meal!");
+            order = new List<string>();
+            prices = new List<double>();
+
+        }
+
+        public static void CancelOrder(ref List<string> order, ref List<double> prices)
+        {
+            bool goAgain = true;
+            while (goAgain)
+            {
+                DisplayOrder(order, prices);
+                Console.Write("\nEnter number of item you would like removed or 0 to cancel entire order: ");
+                int choice = Validator.ValidateChoice("\nEnter number of item you would like removed or 0 to cancel entire order: ", 0, order.Count);
+                if (choice == 0)
+                {
+                    order = new List<string>();
+                    prices = new List<double>();
+                    Console.WriteLine("\nOrder has been canceled.");
+                    break;
+                }
+                else
+                {
+                    string item = order[choice-1];
+                    order.RemoveAt(choice-1);
+                    prices.RemoveAt(choice-1);
+                    Console.WriteLine("\n" + item + " has been removed from the order.");
+                }
+                goAgain = Validator.ValidateYesNo("\nWould you like to remove another item? (y/n): ");
+
+            }
+        }
 
     }
 }
