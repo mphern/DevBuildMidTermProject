@@ -14,6 +14,10 @@ namespace POSTerminal
             bool valid = false;
             Console.Write(message);
             string itemCode = Console.ReadLine().ToUpper();
+            if(itemCode == "0")
+            {
+                return itemCode;
+            }
             while (!valid)
             {
                 foreach (Product product in menu)
@@ -79,6 +83,10 @@ namespace POSTerminal
             double payment;
             while(!double.TryParse(Console.ReadLine(), out payment) || payment < minPaymentNeeded)
             {
+                if(payment == 0)
+                {
+                    return 0;
+                }
                 Console.WriteLine("Invalid input. Please provide sufficient funds.");
                 Console.WriteLine(message);
             }
@@ -91,6 +99,10 @@ namespace POSTerminal
             double payment;
             while (!double.TryParse(Console.ReadLine(), out payment) || payment != paymentNeeded)
             {
+                if(payment == 0)
+                {
+                    return payment;
+                }
                 Console.WriteLine("Invalid input. Please provide funds equal to total.");
                 Console.Write(message);
             }
@@ -102,6 +114,10 @@ namespace POSTerminal
             Console.Write(message);
             Regex pattern = new Regex(@"^\d{9}$");
             string routingNumber = Console.ReadLine().Trim();
+            if(routingNumber == "0")
+            {
+                return routingNumber;
+            }
             while(!pattern.IsMatch(routingNumber))
             {
                 Console.Write("Invalid Routing Number. "+message);
@@ -116,6 +132,10 @@ namespace POSTerminal
             Console.Write(message);
             Regex pattern = new Regex(@"^\d+$");
             string number = Console.ReadLine().Trim();
+            if(number == "0")
+            {
+                return number;
+            }
             while (!pattern.IsMatch(number))
             {
                 Console.Write("Invalid Number. " + message);
@@ -130,6 +150,10 @@ namespace POSTerminal
             Console.Write(message);
             Regex pattern = new Regex(@"^\d{8,19}$");
             string creditCardNumber = Console.ReadLine().Trim();
+            if(creditCardNumber == "0")
+            {
+                return creditCardNumber;
+            }
             while (!pattern.IsMatch(creditCardNumber))
             {
                 Console.Write("Invalid Credit Card Number. " + message);
@@ -139,7 +163,7 @@ namespace POSTerminal
             return creditCardNumber;
         }
 
-        public static void ValidateExpirationDate(string message)
+        public static string ValidateExpirationDate(string message)
 
         {
             Console.Write(message);
@@ -151,6 +175,10 @@ namespace POSTerminal
             {
                 while(!pattern.IsMatch(expirationDate))
                 {
+                    if(expirationDate == "0")
+                    {
+                        return expirationDate;
+                    }
                     Console.Write("Invalid date. " + message);
                     expirationDate = Console.ReadLine().Trim();
                 
@@ -165,15 +193,16 @@ namespace POSTerminal
                 {
                     continue;
                 }
-                DateTime tempDate = DateTime.Today.AddMonths(1);
-                DateTime testDate = new DateTime(tempDate.Year, tempDate.Month, 1);
-                if(date < testDate)
+                DateTime tempDate = DateTime.Today.AddMonths(-1);
+                DateTime testDate = new DateTime(tempDate.Year, tempDate.Month, DateTime.DaysInMonth(tempDate.Year, tempDate.Month));
+                if(date <= testDate)
                 {
                     expirationDate = "";
                     continue;
                 }
                 validDate = true;
             }
+            return expirationDate;
 
         }
 
@@ -182,6 +211,10 @@ namespace POSTerminal
             Console.Write(message);
             Regex pattern = new Regex(@"^\d{3}$");
             string number = Console.ReadLine().Trim();
+            if(number == "0")
+            {
+                return number;
+            }
             while (!pattern.IsMatch(number))
             {
                 Console.Write("Invalid Number. " + message);

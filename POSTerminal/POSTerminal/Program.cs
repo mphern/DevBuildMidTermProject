@@ -16,8 +16,8 @@ namespace POSTerminal
             List<string> customerOrder = new List<string>();
             List<double> orderPrices = new List<double>();
             bool orderDone = false;
-            List<string> choices = new List<string>() { "1. Look at Menu", "2. Create/Add to an order", "3. Display current order and order total", "4. Pay for order",
-                                                        "5. Cancel/Edit current order", "6. Learn about the menu items", "7. Quit" };
+            List<string> choices = new List<string>() { "1. Look at Menu", "2. Create/Add to an Order", "3. Display Current Order and Order Total", "4. Pay for Order",
+                                                        "5. Cancel/Edit Current Order", "6. Learn about the Menu Items", "7. Quit" };
             string currentDirectory = Directory.GetCurrentDirectory();
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
             var fileName = Path.Combine(directory.FullName, "FoodMenu.csv");
@@ -236,7 +236,11 @@ namespace POSTerminal
             {
                 Console.Clear();
                 DisplayMenu(menu);
-                string productCode = Validator.ValidateItemCode("\nPlease provide Item Code for the item you would like to order (i.e. F1, B2, etc.): ", menu);
+                string productCode = Validator.ValidateItemCode("\nPlease provide Item Code (F1, B2, etc.) for the item you would like to order or enter 0 to go back: ", menu);
+                if(productCode == "0")
+                {
+                    return;
+                }
                 int quantity = Validator.ValidateQuantity("How many of this item would you like to order? ");
                 foreach (Product product in menu)
                 {
@@ -286,15 +290,15 @@ namespace POSTerminal
             string grandTotalString = string.Format("{0:0.00}", grandTotal);  
             foreach (string item in order)
             {
-                Console.WriteLine(string.Format("{0,0}.  {1, -25} ${2,0}", count, item, prices[count - 1]));
+                Console.WriteLine(string.Format("{0,0}.  {1, -30} ${2,0}", count, item, prices[count - 1]));
                 count++;
             }
             Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Subtotal:", totalString));
+            Console.WriteLine(string.Format("{0,-3} {1, -30} ${2, 0}", "", "Subtotal:", totalString));
             Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1, -25} ${2, 0}", "", "Sales Tax", taxString));
+            Console.WriteLine(string.Format("{0,-3} {1, -30} ${2, 0}", "", "Sales Tax", taxString));
             Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1,-25} ${2,0}", "", "Grand Total:", grandTotalString));
+            Console.WriteLine(string.Format("{0,-3} {1,-30} ${2,0}", "", "Grand Total:", grandTotalString));
 
         }
 
@@ -304,21 +308,28 @@ namespace POSTerminal
             Console.WriteLine("1. Cash");
             Console.WriteLine("2. Credit");
             Console.WriteLine("3. Check");
-            int choice = Validator.ValidateChoice("Enter choice (1-3): ", 1, 3);
+            Console.WriteLine("4. Go back");
+            Console.Write("> ");
+            int choice = Validator.ValidateChoice("Enter choice (1-4): ", 1, 4);
 
             if(choice == 1)
             {
                 PayWithCash(ref order, ref prices);
             }
 
-            if(choice == 2)
+            else if(choice == 2)
             {
                 PayWithCredit(ref order, ref prices);
             }
 
-            if(choice == 3)
+            else if(choice == 3)
             {
                 PayWithCheck(ref order, ref prices);
+            }
+
+            else
+            {
+                return;
             }
 
         }
@@ -327,7 +338,11 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            double payment = Validator.ValidateCashPayment("\nEnter amount tendered: ", totalPaymentNeeded);
+            double payment = Validator.ValidateCashPayment("\nEnter amount tendered or enter 0 to go back: ", totalPaymentNeeded);
+            if(payment == 0)
+            {
+                return;
+            }
             CashReceipt(ref order, ref prices, payment);
         }
 
@@ -335,10 +350,26 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            double payment = Validator.ValidateCheckPayment("\nPlease provide amount on check: ", totalPaymentNeeded);
-            string routingNumber = Validator.ValidateRoutingNumber("Please provide 9 digit Routing Number: ");
-            string accountNumber = Validator.ValidateAccountCheckNumber("Please provide account number (leave out dashes(-) and spaces): ");
+            double payment = Validator.ValidateCheckPayment("\nPlease provide amount on check or enter 0 to go back to menu: ", totalPaymentNeeded);
+            if(payment == 0)
+            {
+                return;
+            }
+            string routingNumber = Validator.ValidateRoutingNumber("Please provide 9 digit Routing Number or enter 0 to go back to menu: ");
+            if(routingNumber == "0")
+            {
+                return;
+            }
+            string accountNumber = Validator.ValidateAccountCheckNumber("Please provide account number (leave out dashes(-) and spaces) or enter 0 to go back to menu: ");
+            if(accountNumber == "0")
+            {
+                return;
+            }
             string checkNumber = Validator.ValidateAccountCheckNumber("Please provide check number: ");
+            if(checkNumber == "0")
+            {
+                return;
+            }
             CheckReceipt(ref order, ref prices, checkNumber);
         }
 
@@ -346,9 +377,21 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            string creditCardNumber = Validator.ValidateCreditCardNumber("\nPlease provide Credit Card Number: ");
-            Validator.ValidateExpirationDate("Please provide Expiration Date (mm/yy): ");
-            string cvvNumber = Validator.ValidateCVVNumber("Please provide CVV number: ");
+            string creditCardNumber = Validator.ValidateCreditCardNumber("\nPlease provide Credit Card Number or enter 0 to go back to menu: ");
+            if(creditCardNumber == "0")
+            {
+                return;
+            }
+            string date = Validator.ValidateExpirationDate("Please provide Expiration Date (mm/yy) or enter 0 to go back to menu: ");
+            if(date == "0")
+            {
+                return;
+            }
+            string cvvNumber = Validator.ValidateCVVNumber("Please provide CVV number or enter 0 to go back to menu: ");
+            if(cvvNumber == "0")
+            {
+                return;
+            }
             CreditReceipt(ref order, ref prices, creditCardNumber);
         }
 
@@ -356,8 +399,8 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", payment));
-            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Change:", string.Format("{0:0.00}", payment-totalPaymentNeeded));
+            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", payment));
+            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Change:", string.Format("{0:0.00}", payment-totalPaymentNeeded));
             Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();
@@ -369,9 +412,9 @@ namespace POSTerminal
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             string hiddenCardNumber = string.Concat(Enumerable.Repeat("*", creditCardNumber.Length - 4)) + creditCardNumber.Substring(creditCardNumber.Length - 4);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
-            Console.WriteLine("{0,-3} {1,-21} {2,0}", "", "Paid with Card #:", hiddenCardNumber);
-            Console.WriteLine("**********RECEIPT**********");
+            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-19} {2,0}", "", "Paid w/ Card #:", hiddenCardNumber);
+            Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();
             prices = new List<double>();
@@ -382,9 +425,9 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-25} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
-            Console.WriteLine("{0,-3} {1,-25} {2,0}", "", "Paid with Check #:", checkNumber);
-            Console.WriteLine("**********RECEIPT**********");
+            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-30} {2,0}", "", "Paid w/ Check #:", checkNumber);
+            Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();
             prices = new List<double>();
@@ -423,14 +466,19 @@ namespace POSTerminal
             bool goAgain = true;
             while(goAgain)
             {
+                Console.Clear();
                 DisplayMenu(menu);
-                string choice = Validator.ValidateItemCode("\nEnter Item Code of Item you would like to learn about (i.e. F1, B2, etc.): ", menu);
+                string choice = Validator.ValidateItemCode("\nEnter Item Code (F1, B2, etc.) of Item you would like to learn about or enter 0 to go back: ", menu);
+                if(choice == "0")
+                {
+                    return;
+                }
                 foreach(Product product in menu)
                 {
                     if(product.ProductCode == choice)
                     {
                         Console.Write("\n");
-                        Console.WriteLine(product.ProductDesc);
+                        Console.WriteLine(product.ProductName + " - " + product.ProductDesc);
                         break;
                     }
 
