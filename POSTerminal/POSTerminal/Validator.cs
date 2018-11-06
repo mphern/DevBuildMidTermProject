@@ -13,12 +13,12 @@ namespace POSTerminal
         {
             bool valid = false;
             Console.Write(message);
-            string productCode = Console.ReadLine().ToUpper();
+            string itemCode = Console.ReadLine().ToUpper();
             while (!valid)
             {
                 foreach (Product product in menu)
                 {
-                    if (product.ProductCode == productCode)
+                    if (product.ProductCode == itemCode)
                     {
                         valid = true;
                     }
@@ -27,12 +27,12 @@ namespace POSTerminal
                 if (!valid)
                 {
                     Console.Write("Invalid selection. " + message);
-                    productCode = Console.ReadLine().ToUpper();
+                    itemCode = Console.ReadLine().ToUpper();
                 }
 
             }
 
-            return productCode;
+            return itemCode;
         }
 
         public static int ValidateQuantity(string message)

@@ -16,7 +16,8 @@ namespace POSTerminal
             List<string> customerOrder = new List<string>();
             List<double> orderPrices = new List<double>();
             bool orderDone = false;
-            List<string> choices = new List<string>() { "1. Look at Menu", "2. Create/Add to an order", "3. Display current order and order total", "4. Pay for order", "5. Cancel/Edit current order", "6. Quit" };
+            List<string> choices = new List<string>() { "1. Look at Menu", "2. Create/Add to an order", "3. Display current order and order total", "4. Pay for order",
+                                                        "5. Cancel/Edit current order", "6. Learn about the menu items", "7. Quit" };
             string currentDirectory = Directory.GetCurrentDirectory();
             DirectoryInfo directory = new DirectoryInfo(currentDirectory);
             var fileName = Path.Combine(directory.FullName, "FoodMenu.csv");
@@ -72,11 +73,16 @@ namespace POSTerminal
                     }
                 }
 
+                else if(choice == 6)
+                {
+                    DisplayItemDesc(menu);
+                }
+
                 else
                 {
-                    if(orderPrices.Sum() > 0)
+                    if(customerOrder.Count != 0)
                     {
-                        Console.WriteLine("You cannot leave without paying for your food.");
+                        Console.WriteLine("\nYou cannot leave without paying for your food.");
                     }
                     else
                     {
@@ -409,6 +415,27 @@ namespace POSTerminal
                 }
                 goAgain = Validator.ValidateYesNo("\nWould you like to remove another item? (y/n): ");
 
+            }
+        }
+
+        public static void DisplayItemDesc(List<Product> menu)
+        {
+            bool goAgain = true;
+            while(goAgain)
+            {
+                DisplayMenu(menu);
+                string choice = Validator.ValidateItemCode("\nEnter Item Code of Item you would like to learn about (i.e. F1, B2, etc.): ", menu);
+                foreach(Product product in menu)
+                {
+                    if(product.ProductCode == choice)
+                    {
+                        Console.Write("\n");
+                        Console.WriteLine(product.ProductDesc);
+                        break;
+                    }
+
+                }
+                goAgain = Validator.ValidateYesNo("\nWould you like to learn more? (y/n): ");
             }
         }
 

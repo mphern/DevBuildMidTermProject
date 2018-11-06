@@ -5,9 +5,9 @@ Large Fry;1.99;Fry Item;4.50 ounce serving of delicious yummy fries;F3
 Small Drink;0.79;Drink Item;11 ounce fountain drink;D1
 Medium Drink;1.04;Drink Item;21 ounce fountain drink;D2
 Large Drink;1.29;Drink Item;31 ounce fountain drink;D3
-Hamburger;3.99;Burger Item;"4 ounce meat patty served with lettuce, pickles, tomato and ketchup";B1
-Cheeseburger;4.99;Burger Item;"4 ounce meat patty served with American Cheese, lettuce, pickles, tomato and ketchup";B2
-Hamburger Meal;6.02;Meal;"Includes a Hamburger, Medium Fry and Medium Drink";M1
-Cheeseburger Meal;7.02;Meal;"Includes a Cheeseburger, Medium Fry and Medium Drink";M2
-Milkshake;1.49;Dessert Item;"A delectable 21 ounce vanilla Milkshake";E1
-Chocolate Chip Cookie;0.99;Dessert Item;"A luscious 3-inch Chocolate Chip Cookie";E2
+Hamburger;3.99;Burger Item;4 ounce meat patty served with lettuce, pickles, tomato and ketchup;B1
+Cheeseburger;4.99;Burger Item;4 ounce meat patty served with American Cheese, lettuce, pickles, tomato and ketchup;B2
+Hamburger Meal;6.02;Meal;Includes a Hamburger, Medium Fry and Medium Drink;M1
+Cheeseburger Meal;7.02;Meal;Includes a Cheeseburger, Medium Fry and Medium Drink;M2
+Milkshake;1.49;Dessert Item;A delectable 21 ounce vanilla Milkshake;E1
+Chocolate Chip Cookie;0.99;Dessert Item;A luscious 3-inch Chocolate Chip Cookie;E2
