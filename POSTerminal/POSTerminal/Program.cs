@@ -12,7 +12,8 @@ namespace POSTerminal
     {
         static void Main()
         {
-            Console.WriteLine("                      Welcome to Hernski's!\n");
+            Console.WriteLine("             WELCOME TO HERNSKI'S DINER!");
+            Console.Write("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
             List<string> customerOrder = new List<string>();
             List<double> orderPrices = new List<double>();
             bool orderDone = false;
@@ -92,7 +93,7 @@ namespace POSTerminal
  
             }
 
-            Console.WriteLine("\nHave a nice day. Come again!");
+            Console.WriteLine("\nThanks for coming to Hernski's. Have a nice day. Come again!");
             Console.ReadKey();
         }
 
@@ -129,6 +130,7 @@ namespace POSTerminal
 
         public static void DisplayMenu(List<Product> menu)
         {
+            Console.Clear();
             List<string> fries = new List<string>();
             List<string> burgers = new List<string>();
             List<string> drinks = new List<string>();
@@ -161,7 +163,7 @@ namespace POSTerminal
             }
 
 
-            Console.WriteLine("\n                             MENU                               ");
+            Console.WriteLine("\n                         HERNSKI'S MENU                           ");
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Console.WriteLine("           Fries                          Burgers           ");
             Console.WriteLine("      ~~~~~~~~~~~~~~~~~~~~~~         ~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -290,15 +292,15 @@ namespace POSTerminal
             string grandTotalString = string.Format("{0:0.00}", grandTotal);  
             foreach (string item in order)
             {
-                Console.WriteLine(string.Format("{0,0}.  {1, -30} ${2,0}", count, item, prices[count - 1]));
+                Console.WriteLine(string.Format("{0,0}.  {1, -26} ${2,0}", count, item, prices[count - 1]));
                 count++;
             }
-            Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1, -30} ${2, 0}", "", "Subtotal:", totalString));
-            Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1, -30} ${2, 0}", "", "Sales Tax", taxString));
-            Console.WriteLine("====================================");
-            Console.WriteLine(string.Format("{0,-3} {1,-30} ${2,0}", "", "Grand Total:", grandTotalString));
+            Console.WriteLine("=====================================");
+            Console.WriteLine(string.Format("{0,-3} {1, -26} ${2, 0}", "", "Subtotal:", totalString));
+            Console.WriteLine("=====================================");
+            Console.WriteLine(string.Format("{0,-3} {1, -26} ${2, 0}", "", "Sales Tax", taxString));
+            Console.WriteLine("=====================================");
+            Console.WriteLine(string.Format("{0,-3} {1,-26} ${2,0}", "", "Grand Total:", grandTotalString));
 
         }
 
@@ -399,8 +401,8 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", payment));
-            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Change:", string.Format("{0:0.00}", payment-totalPaymentNeeded));
+            Console.WriteLine("{0,-3} {1,-26} ${2,0}", "", "Payment:", string.Format("{0:0.00}", payment));
+            Console.WriteLine("{0,-3} {1,-26} ${2,0}", "", "Change:", string.Format("{0:0.00}", payment-totalPaymentNeeded));
             Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();
@@ -412,8 +414,8 @@ namespace POSTerminal
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             string hiddenCardNumber = string.Concat(Enumerable.Repeat("*", creditCardNumber.Length - 4)) + creditCardNumber.Substring(creditCardNumber.Length - 4);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
-            Console.WriteLine("{0,-3} {1,-19} {2,0}", "", "Paid w/ Card #:", hiddenCardNumber);
+            Console.WriteLine("{0,-3} {1,-26} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-16} {2,0}", "", "Paid w/ Card #:", hiddenCardNumber);
             Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();
@@ -425,8 +427,8 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            Console.WriteLine("{0,-3} {1,-30} ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
-            Console.WriteLine("{0,-3} {1,-30} {2,0}", "", "Paid w/ Check #:", checkNumber);
+            Console.WriteLine("{0,-3} {1,-25}  ${2,0}", "", "Payment:", string.Format("{0:0.00}", Math.Round(prices.Sum() * 1.06, 2)));
+            Console.WriteLine("{0,-3} {1,-28} {2,0}", "", "Paid w/ Check #:", checkNumber);
             Console.WriteLine("***************RECEIPT***************");
             Console.WriteLine("\nThank you! Enjoy your meal!");
             order = new List<string>();

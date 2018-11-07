@@ -7,7 +7,7 @@ using System.IO;
 
 namespace POSTerminal
 {
-    class Product
+    public class Product
     {
         public double Price { get; set; } 
         public string ProductName { get; set; }
