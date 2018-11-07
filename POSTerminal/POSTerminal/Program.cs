@@ -97,6 +97,8 @@ namespace POSTerminal
             Console.ReadKey();
         }
 
+        /*This method goes through the FoodMenu.csv file line by line and creates instances of the Product class and then adds the
+         * instance to the Products List variable menu which it returns.*/
         public static List<Product> ReadMenu(string fileName)
         {
 
