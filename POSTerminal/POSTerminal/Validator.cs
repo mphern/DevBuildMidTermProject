@@ -39,6 +39,7 @@ namespace POSTerminal
             return productCode;
         }
 
+        //Validates that user provides non-negative integer
         public static int ValidateQuantity(string message)
         {
             Console.Write(message);
@@ -51,6 +52,7 @@ namespace POSTerminal
             return quantity;
         }
 
+        //Validates that user provides "yes", "y", "no" or "n" when a yes or no question is asked and returns the appropriate bool
         public static bool ValidateYesNo(string message)
         {
             Console.Write(message);
@@ -67,6 +69,7 @@ namespace POSTerminal
             return false;
         }
 
+        //Validates that user provides a non-negative integer within a min and max range for situations where there are limited choices
         public static int ValidateChoice(string message, int min, int max)
         {
             int choice;
@@ -77,6 +80,7 @@ namespace POSTerminal
             return choice;
         }
 
+        //Validates that user provides payment greater or equal to order total when paying with cash
         public static double ValidateCashPayment(string message, double minPaymentNeeded)
         {
             Console.Write(message);
@@ -93,6 +97,7 @@ namespace POSTerminal
             return payment;
         }
 
+        //Validates that check payment is equal to order toal
         public static double ValidateCheckPayment(string message, double paymentNeeded)
         {
             Console.Write(message);
@@ -169,7 +174,7 @@ namespace POSTerminal
             Console.Write(message);
             bool validDate = false;
             DateTime date = new DateTime();
-            Regex pattern = new Regex(@"^\d{2}[/][1-9][0-9]$");
+            Regex pattern = new Regex(@"^\d{2}[/]\d{2}$");
             string expirationDate = Console.ReadLine().Trim();
             while(!validDate)
             {
@@ -183,8 +188,9 @@ namespace POSTerminal
                     expirationDate = Console.ReadLine().Trim();
                 
 }
-
+                //This turns the expiration date that uses mm/yy into mm/01/20yy (i.e. 03/20 into 03/01/2020) so that it can be assigned to a DateTime variable
                 expirationDate = expirationDate.Substring(0, 3) + "01/20" + expirationDate.Substring(3, 2);
+                //This Try/Catch trys to parse a DateTime from the expirationDate string created.  If it can't, it returns to the beginning of the loop and forces user to input again.
                 try
                 {
                     date = DateTime.Parse(expirationDate);                   
@@ -193,13 +199,16 @@ namespace POSTerminal
                 {
                     continue;
                 }
+                //These next 2 lines creates a DateTime variable testDate assigned to the last day of the previous month from today.
                 DateTime tempDate = DateTime.Today.AddMonths(-1);
                 DateTime testDate = new DateTime(tempDate.Year, tempDate.Month, DateTime.DaysInMonth(tempDate.Year, tempDate.Month));
-                if(date <= testDate)
+                //This tests if the expiration date is before the testDate created.  If it is, the date provided is invalid and will return to beginning of loop so user can provide new date. 
+                if(date < testDate)
                 {
                     expirationDate = "";
                     continue;
                 }
+                //If the code reaches this point, the expiration date provided is valid and changes validDate to true to that it breaks the while loop.
                 validDate = true;
             }
             return expirationDate;

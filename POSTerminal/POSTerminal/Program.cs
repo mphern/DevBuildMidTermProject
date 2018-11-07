@@ -70,7 +70,7 @@ namespace POSTerminal
                     }
                     else
                     {
-                        CancelOrder(ref customerOrder, ref orderPrices);
+                        CancelEditOrder(ref customerOrder, ref orderPrices);
                     }
                 }
 
@@ -379,7 +379,7 @@ namespace POSTerminal
         {
             double totalPaymentNeeded = Math.Round(prices.Sum() * 1.06, 2);
             DisplayOrder(order, prices);
-            string creditCardNumber = Validator.ValidateCreditCardNumber("\nPlease provide Credit Card Number or enter 0 to go back to menu: ");
+            string creditCardNumber = Validator.ValidateCreditCardNumber("\nPlease provide Credit Card Number (no spaces) or enter 0 to go back to menu: ");
             if(creditCardNumber == "0")
             {
                 return;
@@ -436,7 +436,7 @@ namespace POSTerminal
 
         }
 
-        public static void CancelOrder(ref List<string> order, ref List<double> prices)
+        public static void CancelEditOrder(ref List<string> order, ref List<double> prices)
         {
             bool goAgain = true;
             while (goAgain)

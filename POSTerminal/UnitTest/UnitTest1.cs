@@ -20,6 +20,7 @@ namespace UnitTest
             ProductName = "Large Fry"
         };      
 
+        //Adjusted ValidateItemCode method to remove user input and console print outs in order to test the basic functionality of the method
         public static string AdjustedValidateItemCode(List<Product> menu, string userInput)
         {
             bool valid = false;
@@ -43,6 +44,7 @@ namespace UnitTest
             return userInput;
         }
 
+        //Adjusted ValidateQuantity method to remove user input and console print outs in order to test the basic functionality of the method
         public static int AdjustedValidateQuantity(string userInput)
         {
             int quantity;
@@ -54,10 +56,19 @@ namespace UnitTest
             return quantity;
         }
 
-
+        //Adjusted ValidateCashPayment method to remove user input and console print outs in order to test the basic functionality of the method
+        public static double AdjustedValidateCashPayment(string userInput, double minPaymentNeeded)
+        {
+            double payment;
+            while (!double.TryParse(userInput, out payment) || payment < minPaymentNeeded)
+            {
+                return -1;
+            }
+            return payment;
+        }
 
         [TestMethod]
-        public void Validate_ItemCode_ReturnsTrue()
+        public void Validate_ItemCode_ReturnsValidItemCode()
         {
             List<Product> menu = new List<Product>() { product };
             string result = AdjustedValidateItemCode(menu, "F3");
@@ -80,6 +91,23 @@ namespace UnitTest
             Assert.AreEqual(-1, result2);
 
             Assert.AreEqual(-1, result3);
+        }
+
+        [TestMethod]
+        public void Validate_CashPayment_ReturnsValidPayment()
+        {
+            double result = AdjustedValidateCashPayment("20", 15.50);
+            double result2 = AdjustedValidateCashPayment("15", 15.50);
+            double result3 = AdjustedValidateCashPayment("-20", 15.50);
+            double result4 = AdjustedValidateCashPayment("aaa", 15.50);
+
+            Assert.AreEqual(20, result);
+
+            Assert.AreEqual(-1, result2);
+
+            Assert.AreEqual(-1, result3);
+
+            Assert.AreEqual(-1, result4);
         }
     }
 }
